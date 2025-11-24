@@ -1,2 +1,3 @@
 # LoggingInterfaces
-The interface to a logger.
+
+The interface to a common logger.

@@ -6,38 +6,66 @@ import FoundationEssentials
 import Foundation
 #endif
 
-@Test func example() async throws {
+@Suite struct LoggingInterfacesTests {
     
-    enum PrintMode: Sendable {
-        case standard
-        case error
-    }
-    
-    final class MyLogger: Logger {
+    @Test func printing() async throws {
         
-        typealias Message = String
-        typealias Mode = PrintMode
-        
-        init() {}
-        
-        func log(_ message: Message, withMode mode: Mode) {
-            switch mode {
-            case .standard:
-                print(message)
-            case .error:
-                FileHandle.standardError.write(Data("\(message)\n".utf8))
+        final class MyLogger: Logger {
+            
+            typealias Message = String
+            typealias Mode = PrintMode
+            
+            init() {}
+            
+            func log(_ message: Message, withMode mode: Mode? = nil) {
+                switch mode {
+                case .standard, nil:
+                    print(message)
+                case .error:
+                    FileHandle.standardError.write(Data("\(message)\n".utf8))
+                }
             }
+            
+            func close() throws {
+                // -
+            }
+            
         }
         
-        func close() throws {
-            // -
-        }
+        let logger: any Logger<String,PrintMode> = MyLogger()
+        
+        logger.log("hello", withMode: .standard)
+        logger.log("error!", withMode: .error)
         
     }
     
-    let logger: any Logger<String,PrintMode> = MyLogger()
+    @Test func indifferentPrinting() async throws {
+        
+        final class MyLogger: Logger {
+            
+            typealias Message = String
+            typealias Mode = IndifferentLoggingMode
+            
+            init() {}
+            
+            func log(_ message: Message, withMode mode: Mode? = nil) {
+                print(message)
+            }
+            
+            func close() throws {
+                // -
+            }
+            
+        }
+        
+        let logger = MyLogger()
+        
+        logger.log("hello")
+        logger.log("error!")
+        
+    }
     
-    logger.log("hello", withMode: .standard)
-    logger.log("error!", withMode: .error)
+    
+
     
 }

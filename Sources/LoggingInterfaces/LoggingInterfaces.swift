@@ -7,7 +7,7 @@
 /// better be part of the `Message` type).
 public protocol Logger<Message,Mode>: Sendable {
     
-    associatedtype Message: Sendable
+    associatedtype Message: Sendable, CustomStringConvertible
     associatedtype Mode: Sendable
     
     /// Log a message.

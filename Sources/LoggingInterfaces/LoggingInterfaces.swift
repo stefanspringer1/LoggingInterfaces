@@ -7,7 +7,7 @@
 /// better be part of the `Message` type).
 /// If the mode is not given, a default mode should
 /// be used.
-@available(*, deprecated, message: "this package is deprecated, use the repository https://github.com/swiftxml/LoggingInterfaces instead")
+@available(*, deprecated, message: "this package is deprecated, use the repository https://github.com/swiftxml/LoggingInterfaces instead and note the version number being reset to 1.0.0")
 public protocol Logger<Message,Mode>: Sendable {
     
     associatedtype Message: Sendable, CustomStringConvertible
@@ -38,7 +38,7 @@ public enum PrintMode: Sendable {
 ///
 /// The use is limited because all loggers have to
 /// understand the same logging mode.
-@available(*, deprecated, message: "this package is deprecated, use the repository https://github.com/swiftxml/LoggingInterfaces instead")
+@available(*, deprecated, message: "this package is deprecated, use the repository https://github.com/swiftxml/LoggingInterfaces instead and note the version number being reset to 1.0.0")
 public final class MultiLogger<Message: Sendable & CustomStringConvertible,Mode>: Logger {
 
     public typealias Message = Message

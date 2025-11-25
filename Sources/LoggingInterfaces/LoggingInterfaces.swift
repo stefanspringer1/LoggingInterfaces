@@ -31,3 +31,38 @@ public enum PrintMode: Sendable {
     case standard
     case error
 }
+
+/// This is a logger that can be used to "merge" several other loggers,
+/// i.e. all messages are being distributed to all loggers.
+///
+/// The use is limited because all loggers have to
+/// understand the same logging mode.
+public final class MultiLogger<Message: Sendable & CustomStringConvertible,Mode>: Logger {
+
+    public typealias Message = Message
+    public typealias Mode = Mode
+    
+    private let _loggers: [any Logger<Message,Mode>]
+    
+    public var loggers: [any Logger<Message,Mode>] { _loggers }
+    
+    public init(_ loggers: [any Logger<Message,Mode>]) {
+        self._loggers = loggers
+    }
+    
+    public convenience init(_ loggers: any Logger<Message,Mode>...) {
+        self.init(loggers)
+    }
+    
+    public func log(_ message: Message, withMode mode: Mode? = nil) {
+        _loggers.forEach { logger in
+            logger.log(message, withMode: mode)
+        }
+    }
+    
+    public func close() throws {
+        try _loggers.forEach { logger in
+            try logger.close()
+        }
+    }
+}
